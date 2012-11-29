@@ -1,0 +1,15 @@
+.eunit
+deps
+note
+bin
+doc
+Mnesia*
+priv/js
+priv/license*
+license*
+src/playii_keygen.erl
+*.log
+*.config
+*.o
+*.beam
+*.plt

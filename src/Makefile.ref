@@ -1,0 +1,44 @@
+#######################################################################
+## install spidermonkey first
+##   from souce
+##     BUILD_OPT=1 make -f Makefile.ref
+##     BUILD_OPT=1 JS_DIST=/usr/local/spidermonkey make -f Makefile.ref export
+##   or install by package management
+##     apt-get install libmozjs-dev
+##     yum install js-devel
+#######################################################################
+
+CC = gcc
+DEFS = -DHAVE_CONFIG_H
+DEFAULT_INCLUDES = -I.
+CFLAGS = -g -O2
+CPPFLAGS = -L/usr/local/lib -L/opt/local/lib -I/usr/lib/erlang/usr/include -I/usr/lib/erlang/usr/include -I/usr/local/lib/erlang/usr/include -I/opt/local/lib/erlang/usr/include -I/usr/include/js -I/usr/include/mozjs -I/usr/local/include/js -I/opt/local/include/js -DXP_UNIX
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(CPPFLAGS) $(CFLAGS)
+
+CCLD = $(CC)
+LIBS = -lmozjs -L/usr/local/lib -L/opt/local/lib -lpthread
+LDFLAGS = -L/usr/local/lib -L/opt/local/lib -I/usr/lib/erlang/usr/include -I/usr/lib/erlang/usr/include -I/usr/local/lib/erlang/usr/include -I/opt/local/lib/erlang/usr/include -I/usr/include/js -I/usr/include/mozjs -I/usr/local/include/js -I/opt/local/include/js -DXP_UNIX
+LINK = $(CCLD) $(CFLAGS) $(LDFLAGS) -o $@
+
+LN_S = ln -s
+
+EXEEXT = 
+OBJEXT = o
+DEPEXT = d
+
+JS_SRC = couch_js.c
+JS_DEP = couch_js.$(DEPEXT)
+JS_OBJ = couch_js.$(OBJEXT)
+JS_EXE = couch_js$(EXEEXT)
+
+.c.o:
+	$(COMPILE) -MT $@ -MD -MP -c -o $@ $<
+
+$(JS_EXE): $(JS_OBJ) 
+	@rm -f  $(JS_EXE)
+	$(LINK) $(JS_OBJ) $(LIBS)
+
+clean:
+	@rm -f $(JS_DEP) $(JS_OBJ) $(JS_EXE)
+
+
